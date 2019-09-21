@@ -1,4 +1,6 @@
 {
+  "short_name": "Log",
+  "name": "Log",
   "icons": [
     {
       "src": "static/android-chrome-192x192.png",
