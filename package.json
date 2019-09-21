@@ -1,5 +1,6 @@
 {
   "name": "activity-log",
+  "homepage": "https://jonathanhudak.com/Log",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
@@ -11,13 +12,22 @@
     "react-scripts": "3.0.1"
   },
   "devDependencies": {
+    "@emotion/core": "^10.0.17",
+    "@emotion/styled": "^10.0.17",
+    "@rebass/forms": "^4.0.6",
+    "@rebass/preset": "^4.0.5",
+    "emotion-theming": "^10.0.19",
+    "gh-pages": "^2.1.1",
+    "rebass": "^4.0.6",
     "typescript": "3.3.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": [
     ">0.2%",

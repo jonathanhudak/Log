@@ -1,0 +1,10 @@
+{
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "json",
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true },
+    { "language": "json", "autoFix": true }
+  ]
+}
