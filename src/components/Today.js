@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import Container from "components/Container";
 import { Heading, Box } from "rebass";
 
 function Now() {
@@ -18,19 +19,20 @@ function Now() {
     <Box>
       <Box
         sx={{
-          px: 4,
-          py: 6,
+          py: [3, 6],
           bg: "bg",
           backgroundImage:
-            "url(https://source.unsplash.com/random/1024x768?weather)",
+            "url(https://images.unsplash.com/photo-1552484586-1a51df66315c?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=768&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=1024)",
           backgroundBlendMode: "multiply",
           backgroundSize: "cover",
-          color: "white"
+          color: "bg"
         }}
       >
-        <Heading as="h1" textAlign="center" fontSize={[3, 4]}>
-          {now.format("MMMM Do YYYY, h:mm:ss a")}
-        </Heading>
+        <Container>
+          <Heading as="h1" fontSize={[3, 4, 5]}>
+            {now.format("MMMM Do YYYY, h:mm:ss a")}
+          </Heading>
+        </Container>
       </Box>
     </Box>
   );
