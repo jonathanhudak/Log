@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import moment from "moment";
 import useLogs from "utils/useLogs";
 import Log from "components/Log";
-import { Box } from "rebass";
+import { Box, Flex, Heading, Button } from "rebass";
 import Container from "components/Container";
 import { Label, Select } from "@rebass/forms";
 
@@ -30,32 +31,78 @@ function Sorter({ sort, setSort }) {
   );
 }
 
-export default function List() {
-  const { logs, addNewLog, updateLog } = useLogs();
-  const [sort, setSort] = useState(descending);
-  const sortedLogs = logs.sort((a, b) => {
+function groupLogsByDay(logs = []) {
+  return logs.reduce((acc, log) => {
+    const day = moment(log.date).format("YYYY-MM-DD");
+
+    if (acc[day]) {
+      acc[day].push(log);
+    } else {
+      acc[day] = [log];
+    }
+    return acc;
+  }, {});
+}
+
+function sortLogs(logs, sort) {
+  return logs.sort((a, b) => {
     if (sort === ascending) {
       return moment(a.date).valueOf() - moment(b.date).valueOf();
     }
     return moment(b.date).valueOf() - moment(a.date).valueOf();
   });
+}
+
+const listStyle = {
+  listStyle: "none",
+  p: 0,
+  m: 0
+};
+
+function DayLog({ day, logs, sort, updateLog }) {
+  const [open, setIsOpen] = useState(moment(day).isSame(moment(), "day"));
+  return (
+    <Box as="li" sx={{ mb: 1 }}>
+      <Flex justifyContent="space-between">
+        <Heading>{moment(day).format("dddd")}</Heading>
+
+        <Button onClick={() => setIsOpen(!open)} sx={{ borderRadius: 0 }}>
+          {open ? (
+            <Box as={MdExpandLess} sx={{ fontSize: [3, 4] }} />
+          ) : (
+            <MdExpandMore />
+          )}
+        </Button>
+      </Flex>
+      {open && (
+        <Box as="ul" sx={listStyle}>
+          {sortLogs(logs, sort).map(log => (
+            <Box as="li" key={log.id}>
+              <Log defaultLog={log} updateLog={updateLog} />
+            </Box>
+          ))}
+        </Box>
+      )}
+    </Box>
+  );
+}
+
+export default function List() {
+  const { logs, addNewLog, updateLog } = useLogs();
+  const [sort, setSort] = useState(descending);
+  const sortedLogs = sortLogs(logs);
+
+  const byDay = groupLogsByDay(sortedLogs);
+
   return (
     <Container>
-      <Box
-        as="ul"
-        sx={{
-          listStyle: "none",
-          p: 0,
-          m: 0
-        }}
-      >
+      <Box as="ul" sx={listStyle}>
         <Box as="li">
           <Log addNewLog={addNewLog} updateLog={updateLog} />
         </Box>
-        {sortedLogs.map(log => (
-          <Box as="li" key={log.id}>
-            <Log defaultLog={log} updateLog={updateLog} />
-          </Box>
+
+        {Object.entries(byDay).map(([day, dayLogs]) => (
+          <DayLog key={day} updateLog={updateLog} logs={dayLogs} day={day} />
         ))}
       </Box>
       <Sorter sort={sort} setSort={setSort} />
