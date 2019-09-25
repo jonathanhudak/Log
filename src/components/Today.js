@@ -24,12 +24,20 @@ function Now() {
           backgroundImage:
             "url(https://images.unsplash.com/photo-1552484586-1a51df66315c?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=768&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=1024)",
           backgroundBlendMode: "multiply",
-          backgroundSize: "cover",
-          color: "bg"
+          backgroundSize: "cover"
         }}
       >
         <Container>
-          <Heading as="h1" fontSize={[3, 4, 5]}>
+          <Heading
+            as='h1'
+            sx={{
+              bg: "darkest",
+              color: "white",
+              // display: "inline-block",
+              fontSize: [3, 4, 5],
+              p: 1
+            }}
+          >
             {now.format("MMMM Do YYYY, h:mm:ss a")}
           </Heading>
         </Container>

@@ -13,12 +13,12 @@ const descending = "DEC";
 function Sorter({ sort, setSort }) {
   return (
     <Box pt={[2, 4]}>
-      <Label htmlFor="sorting" mb={1}>
+      <Label htmlFor='sorting' mb={1}>
         Logs sorting
       </Label>
       <Select
-        id="sorting"
-        name="sorting"
+        id='sorting'
+        name='sorting'
         value={sort}
         onChange={e => {
           setSort(e.target.value);
@@ -62,22 +62,21 @@ const listStyle = {
 function DayLog({ day, logs, sort, updateLog }) {
   const [open, setIsOpen] = useState(moment(day).isSame(moment(), "day"));
   return (
-    <Box as="li" sx={{ mb: 1 }}>
-      <Flex justifyContent="space-between">
+    <Box as='li' sx={{ mb: 1 }}>
+      <Flex justifyContent='space-between' sx={{ mb: 2 }}>
         <Heading>{moment(day).format("dddd")}</Heading>
 
-        <Button onClick={() => setIsOpen(!open)} sx={{ borderRadius: 0 }}>
-          {open ? (
-            <Box as={MdExpandLess} sx={{ fontSize: [3, 4] }} />
-          ) : (
-            <MdExpandMore />
-          )}
+        <Button variant='outline' onClick={() => setIsOpen(!open)}>
+          <Box
+            as={open ? MdExpandLess : MdExpandMore}
+            sx={{ fontSize: [3, 4] }}
+          />
         </Button>
       </Flex>
       {open && (
-        <Box as="ul" sx={listStyle}>
+        <Box as='ul' sx={listStyle}>
           {sortLogs(logs, sort).map(log => (
-            <Box as="li" key={log.id}>
+            <Box as='li' key={log.id}>
               <Log defaultLog={log} updateLog={updateLog} />
             </Box>
           ))}
@@ -86,6 +85,8 @@ function DayLog({ day, logs, sort, updateLog }) {
     </Box>
   );
 }
+
+const enableSorting = false;
 
 export default function List() {
   const { logs, addNewLog, updateLog } = useLogs();
@@ -96,8 +97,8 @@ export default function List() {
 
   return (
     <Container>
-      <Box as="ul" sx={listStyle}>
-        <Box as="li">
+      <Box as='ul' sx={listStyle}>
+        <Box as='li'>
           <Log addNewLog={addNewLog} updateLog={updateLog} />
         </Box>
 
@@ -105,7 +106,7 @@ export default function List() {
           <DayLog key={day} updateLog={updateLog} logs={dayLogs} day={day} />
         ))}
       </Box>
-      <Sorter sort={sort} setSort={setSort} />
+      {enableSorting && <Sorter sort={sort} setSort={setSort} />}
     </Container>
   );
 }

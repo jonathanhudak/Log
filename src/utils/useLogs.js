@@ -14,9 +14,9 @@ export default function useLogs() {
     localStorage.setItem(logsStorageKey, JSON.stringify(newValue));
   }, []);
 
-  function updateLog(id, newLog) {
+  function updateLog(newLog) {
     const updatedLogs = logs.map(oldLog => {
-      if (oldLog.id === id) {
+      if (oldLog.id === newLog.id) {
         return {
           ...oldLog,
           ...newLog

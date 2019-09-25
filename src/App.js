@@ -1,27 +1,42 @@
 import React from "react";
 import { ThemeProvider } from "emotion-theming";
-import theme from "@rebass/preset";
 import List from "components/List";
 import Today from "components/Today";
 import { Global, css } from "@emotion/core";
 import { Box } from "rebass";
+import presetTheme from "@rebass/preset";
+
+const theme = {
+  ...presetTheme,
+  colors: {
+    ...presetTheme.colors,
+    text: presetTheme.colors.background,
+    background: "hsl(199, 47%, 20%)",
+    darkest: "hsla(199, 47%, 10%, .7)"
+  },
+  buttons: {
+    primary: {
+      color: "white",
+      bg: presetTheme.colors.primary
+    },
+    secondary: {
+      color: "white",
+      bg: presetTheme.colors.secondary
+    },
+    outline: {
+      color: "tomato",
+      background: "none",
+      border: `2px solid ${presetTheme.colors.primary}`
+    }
+  }
+};
 
 export default props => (
-  <ThemeProvider
-    theme={{
-      ...theme,
-      colors: {
-        ...theme.colors,
-        primary: "#1F3611",
-        text: "#114",
-        bg: "#ffe500"
-      }
-    }}
-  >
+  <ThemeProvider theme={theme}>
     <Global
       styles={css`
         html {
-          background: #ffe500;
+          background-color: ${theme.colors.background};
         }
         html,
         body {
