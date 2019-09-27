@@ -27,6 +27,10 @@ const theme = {
       color: "tomato",
       background: "none",
       border: `2px solid ${presetTheme.colors.primary}`
+    },
+    icon: {
+      bg: "transparent",
+      borderColor: "transparent"
     }
   }
 };

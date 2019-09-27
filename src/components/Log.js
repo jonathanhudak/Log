@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import moment from "moment";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import { MdModeEdit } from "react-icons/md";
 import { Flex, Card, Box, Button, Text } from "rebass";
 import { Label, Textarea } from "@rebass/forms";
 
@@ -14,7 +15,10 @@ export default function Log({ addNewLog, defaultLog, updateLog }) {
   );
   const [isEditing, setIsEditing] = useState(!log);
   const toggleEditing = () => setIsEditing(!isEditing);
-  const cancelEditing = () => setIsEditing(false);
+  const cancelEditing = () => {
+    setLog(defaultLog ? defaultLog.value : "");
+    setIsEditing(false);
+  };
   function saveLog(e) {
     e.preventDefault();
 
@@ -28,6 +32,7 @@ export default function Log({ addNewLog, defaultLog, updateLog }) {
         sentiment
       });
       setLog("");
+      setSentiment(null);
     } else {
       const update = {
         ...defaultLog,
@@ -47,6 +52,7 @@ export default function Log({ addNewLog, defaultLog, updateLog }) {
         <Box mb={2}>
           <Label htmlFor='entry'>What occurred?</Label>
           <Textarea
+            autoFocus
             id='entry'
             name='entry'
             onChange={onLogChange}
@@ -89,22 +95,27 @@ export default function Log({ addNewLog, defaultLog, updateLog }) {
   }
 
   return (
-    <Card onDoubleClick={toggleEditing} sx={{ bg: "darkest", mb: 3 }}>
+    <Card sx={{ bg: "darkest", mb: 3 }}>
       <Text>{log}</Text>
       <Flex justifyContent='space-between' alignItems='center'>
         <Box sx={{ fontSize: 1, py: 2 }}>
           <Text>{moment(defaultLog.date).format("h:mm:ss a")}</Text>
           <Text>{moment(defaultLog.date).fromNow()}</Text>
         </Box>
-        {!!sentiment && (
-          <Box mr={2}>
-            {sentiment === sentimentNegative ? (
-              <FaThumbsDown />
-            ) : (
-              <FaThumbsUp />
-            )}
-          </Box>
-        )}
+        <Flex alignItems='center'>
+          <Button onClick={toggleEditing} variant='icon' mr={2}>
+            <MdModeEdit />
+          </Button>
+          {!!sentiment && (
+            <Box mr={2}>
+              {sentiment === sentimentNegative ? (
+                <FaThumbsDown />
+              ) : (
+                <FaThumbsUp />
+              )}
+            </Box>
+          )}
+        </Flex>
       </Flex>
     </Card>
   );
