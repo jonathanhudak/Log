@@ -1,54 +1,55 @@
 import React from "react";
-import { ThemeProvider } from "emotion-theming";
 import List from "components/List";
-import Today from "components/Today";
-import { Global, css } from "@emotion/core";
-import { Box } from "rebass";
-import presetTheme from "@rebass/preset";
+import Now from "components/Now";
+import CenteredPage from "components/CenteredPage";
+import PrivateRoute from "components/PrivateRoute";
+import { AccountProvider, useAccount } from "@jmhudak/strapi-auth";
+import { Box, Heading, Flex, Button, Text } from "rebass";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useHistory
+} from "react-router-dom";
+import { hot } from "react-hot-loader";
+import ApolloProvider from "components/ApolloProvider";
+import StylesProvider from "components/StylesProvider";
+import Login from "components/Login";
 
-const theme = {
-  ...presetTheme,
-  colors: {
-    ...presetTheme.colors,
-    text: presetTheme.colors.background,
-    background: "hsl(199, 47%, 20%)",
-    darkest: "hsla(199, 47%, 10%, .7)"
-  },
-  buttons: {
-    primary: {
-      color: "white",
-      bg: presetTheme.colors.primary
-    },
-    secondary: {
-      color: "white",
-      bg: presetTheme.colors.secondary
-    },
-    outline: {
-      color: "tomato",
-      background: "none",
-      border: `2px solid ${presetTheme.colors.primary}`
-    },
-    icon: {
-      bg: "transparent",
-      borderColor: "transparent"
-    }
-  }
-};
+function Home() {
+  return (
+    <CenteredPage>
+      <Box>
+        <Heading>Hello!</Heading>
+        <Button as={Link} to="/login">
+          Login
+        </Button>
+      </Box>
+    </CenteredPage>
+  );
+}
 
-export default props => (
-  <ThemeProvider theme={theme}>
-    <Global
-      styles={css`
-        html {
-          background-color: ${theme.colors.background};
-        }
-        html,
-        body {
-          margin: 0;
-          padding: 0;
-        }
-      `}
-    />
+function AccountInfo() {
+  const { account, logout } = useAccount();
+  const history = useHistory();
+
+  const onLogout = () => {
+    logout(() => history.push("/"));
+  };
+
+  return (
+    <Flex py={2} alignItems="center" justifyContent="flex-end">
+      <Text mr={2}>Hello {account.user.username}!</Text>
+      <Button onClick={onLogout} variant="outline">
+        Logout
+      </Button>
+    </Flex>
+  );
+}
+
+function Today(props) {
+  return (
     <Box
       sx={{
         fontFamily: "body",
@@ -56,9 +57,40 @@ export default props => (
         height: "inherit"
       }}
     >
-      <Today />
+      <AccountInfo />
+      <Now />
       <List />
       {props.children}
     </Box>
-  </ThemeProvider>
+  );
+}
+
+console.log("process.env.REACT_APP_ENDPOINT", process.env.REACT_APP_ENDPOINT);
+
+const App = props => (
+  <ApolloProvider>
+    <StylesProvider>
+      <AccountProvider endpoint={process.env.REACT_APP_ENDPOINT}>
+        <Router>
+          <div className="wrapper">
+            <Switch>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/" exact>
+                <Home />
+              </Route>
+              <PrivateRoute path="/today">
+                <Today />
+              </PrivateRoute>
+              <Route path="*">404</Route>
+            </Switch>
+          </div>
+        </Router>
+      </AccountProvider>
+    </StylesProvider>
+    >
+  </ApolloProvider>
 );
+
+export default hot(module)(App);
