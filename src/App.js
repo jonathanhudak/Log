@@ -4,7 +4,9 @@ import CenteredPage from "components/CenteredPage";
 import PrivateRoute from "components/PrivateRoute";
 import { AccountProvider, useAccount } from "@jmhudak/strapi-auth";
 import { Box, Heading, Flex, Button, Text } from "rebass";
-import { ListLogs } from "components/Logs";
+import { ListLogs } from "components/Log";
+import { ListHabits } from "components/Habit";
+import { ListIdentities } from "components/Identity";
 import {
   BrowserRouter as Router,
   Switch,
@@ -59,8 +61,10 @@ function Today(props) {
     >
       <AccountInfo />
       <Now />
-
       <ListLogs />
+
+      <ListHabits />
+      <ListIdentities />
       {props.children}
     </Box>
   );
