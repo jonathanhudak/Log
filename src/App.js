@@ -1,5 +1,4 @@
 import React from "react";
-import List from "components/List";
 import Now from "components/Now";
 import CenteredPage from "components/CenteredPage";
 import PrivateRoute from "components/PrivateRoute";
@@ -62,7 +61,6 @@ function Today(props) {
       <Now />
 
       <ListLogs />
-      <List />
       {props.children}
     </Box>
   );

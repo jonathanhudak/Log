@@ -21,8 +21,6 @@ export default function Now() {
         <Heading
           as="h1"
           sx={{
-            bg: "darkest",
-            color: "white",
             fontSize: [3, 4, 5],
             p: 1
           }}
