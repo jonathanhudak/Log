@@ -5,6 +5,7 @@ import CenteredPage from "components/CenteredPage";
 import PrivateRoute from "components/PrivateRoute";
 import { AccountProvider, useAccount } from "@jmhudak/strapi-auth";
 import { Box, Heading, Flex, Button, Text } from "rebass";
+import { ListLogs } from "components/Logs";
 import {
   BrowserRouter as Router,
   Switch,
@@ -59,13 +60,13 @@ function Today(props) {
     >
       <AccountInfo />
       <Now />
+
+      <ListLogs />
       <List />
       {props.children}
     </Box>
   );
 }
-
-console.log("process.env.REACT_APP_ENDPOINT", process.env.REACT_APP_ENDPOINT);
 
 const App = props => (
   <ApolloProvider>
