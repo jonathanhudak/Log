@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import gql from "graphql-tag";
+import { Box } from "rebass";
+import { Label, Select } from "@rebass/forms";
 import { useMutation, useQuery } from "@apollo/react-hooks";
 
-const GET_IDENTITIES = gql`
+export const GET_IDENTITIES = gql`
   {
     identities {
       id
       name
+      habits {
+        id
+        name
+      }
     }
   }
 `;
@@ -42,6 +48,34 @@ const DELETE_IDENTITY = gql`
     }
   }
 `;
+
+export function IdentitySelect({ value, onChange }) {
+  const { loading, error, data } = useQuery(GET_IDENTITIES);
+
+  if (loading) return "Loading identities...";
+  if (error) return `Error fetching identities! ${error.message}`;
+
+  const { identities } = data;
+  return (
+    <div>
+      <Box>
+        <Label htmlFor='country'>Identity</Label>
+        <Select
+          value={value}
+          id='identity-select'
+          name='identity'
+          onChange={e => onChange(e.target.value)}
+        >
+          {identities.map(identity => (
+            <option key={identity.id} value={identity.id}>
+              {identity.name}
+            </option>
+          ))}
+        </Select>
+      </Box>
+    </div>
+  );
+}
 
 function DeleteIdentityButton({ id }) {
   const [deleteIdentity, { loading, error }] = useMutation(DELETE_IDENTITY, {
@@ -125,13 +159,13 @@ export function EditIdentity({ identity }) {
         }}
       >
         <input
-          placeholder="identity name"
+          placeholder='identity name'
           defaultValue={identity && identity.name}
           ref={node => {
             input = node;
           }}
         />
-        <button type="submit">
+        <button type='submit'>
           {identity ? "Save changes" : "Create identity"}
         </button>
         {identity && (

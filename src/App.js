@@ -24,7 +24,7 @@ function Home() {
     <CenteredPage>
       <Box>
         <Heading>Hello!</Heading>
-        <Button as={Link} to="/login">
+        <Button as={Link} to='/login'>
           Login
         </Button>
       </Box>
@@ -41,9 +41,9 @@ function AccountInfo() {
   };
 
   return (
-    <Flex py={2} alignItems="center" justifyContent="flex-end">
+    <Flex py={2} alignItems='center' justifyContent='flex-end'>
       <Text mr={2}>Hello {account.user.username}!</Text>
-      <Button onClick={onLogout} variant="outline">
+      <Button onClick={onLogout} variant='outline'>
         Logout
       </Button>
     </Flex>
@@ -75,24 +75,23 @@ const App = props => (
     <StylesProvider>
       <AccountProvider endpoint={process.env.REACT_APP_ENDPOINT}>
         <Router>
-          <div className="wrapper">
+          <div className='wrapper'>
             <Switch>
-              <Route path="/login">
+              <Route path='/login'>
                 <Login />
               </Route>
-              <Route path="/" exact>
+              <Route path='/' exact>
                 <Home />
               </Route>
-              <PrivateRoute path="/today">
+              <PrivateRoute path='/today'>
                 <Today />
               </PrivateRoute>
-              <Route path="*">404</Route>
+              <Route path='*'>404</Route>
             </Switch>
           </div>
         </Router>
       </AccountProvider>
     </StylesProvider>
-    >
   </ApolloProvider>
 );
 

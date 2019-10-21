@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import gql from "graphql-tag";
 import { useMutation, useQuery } from "@apollo/react-hooks";
+import { IdentitySelect } from "components/Identity";
 
 const GET_HABITS = gql`
   {
     habits {
       id
       name
+      identity {
+        name
+      }
     }
   }
 `;
@@ -23,8 +27,13 @@ const CREATE_HABIT = gql`
 `;
 
 const UPDATE_HABIT = gql`
-  mutation UpdateHabit($id: ID!, $name: String!) {
-    updateHabit(input: { where: { id: $id }, data: { name: $name } }) {
+  mutation UpdateHabit($id: ID!, $name: String!, $identityId: ID) {
+    updateHabit(
+      input: {
+        where: { id: $id }
+        data: { name: $name, identity: $identityId }
+      }
+    ) {
       habit {
         id
         name
@@ -75,6 +84,9 @@ function DeleteHabitButton({ id }) {
 
 export function EditHabit({ habit }) {
   const [isEditing, setIsEditing] = useState(!habit);
+  const [identityId, setIdentityId] = useState(
+    habit && habit.identity && habit.identity.id
+  );
   const mutation = habit ? UPDATE_HABIT : CREATE_HABIT;
   const action = habit ? "updateHabit" : "createHabit";
   const id = habit ? habit.id : undefined;
@@ -110,6 +122,7 @@ export function EditHabit({ habit }) {
     return (
       <div>
         <strong>{habit.name}</strong>
+        {habit.identity && <span>{habit.identity.name}</span>}
         <button onClick={() => setIsEditing(true)}>edit</button>
       </div>
     );
@@ -120,18 +133,19 @@ export function EditHabit({ habit }) {
       <form
         onSubmit={e => {
           e.preventDefault();
-          editHabit({ variables: { id, name: input.value } });
+          editHabit({ variables: { id, name: input.value, identityId } });
           setIsEditing(false);
         }}
       >
         <input
-          placeholder="habit name"
+          placeholder='habit name'
           defaultValue={habit && habit.name}
           ref={node => {
             input = node;
           }}
         />
-        <button type="submit">{habit ? "Save changes" : "Create habit"}</button>
+        <IdentitySelect value={identityId} onChange={setIdentityId} />
+        <button type='submit'>{habit ? "Save changes" : "Create habit"}</button>
         {habit && <button onClick={() => setIsEditing(false)}>cancel</button>}
         {habit && habit.id && <DeleteHabitButton id={habit.id} />}
       </form>
